@@ -4,10 +4,17 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../utils/supabaseClient";
 
+// Define the type for a journal record returned from the search query.
+interface JournalResult {
+  title: string;
+  subject_area: string;
+  unique_id: number;
+}
+
 export default function Home() {
   const router = useRouter();
   const [query, setQuery] = useState<string>("");
-  const [results, setResults] = useState<any[]>([]);
+  const [results, setResults] = useState<JournalResult[]>([]);
 
   const handleSearch = async (searchTerm: string) => {
     setQuery(searchTerm);
@@ -20,7 +27,8 @@ export default function Home() {
         .limit(5); // Limit the query to 5 results
 
       if (!error) {
-        setResults(data || []);
+        // Cast the data to JournalResult[] to satisfy TypeScript
+        setResults((data as JournalResult[]) || []);
       }
     } else {
       setResults([]);

@@ -6,7 +6,7 @@ export default function Disclaimer() {
         <h1 className="text-4xl font-bold mb-6 text-center">Disclaimer</h1>
         <div className="space-y-6 text-lg text-gray-700">
           <p>
-            The information provided on this website—including data and details related to approved and categorized journals sourced from the Higher Education Commission (HEC) Pakistan—is for general informational purposes only. While we strive to ensure the accuracy and reliability of the information presented, we make no warranties or representations of any kind, express or implied, regarding its completeness, accuracy, reliability, or currency. All information is provided on an "as-is" basis without any guarantee of updates or corrections.
+            The information provided on this website—including data and details related to approved and categorized journals sourced from the Higher Education Commission (HEC) Pakistan—is for general informational purposes only. While we strive to ensure the accuracy and reliability of the information presented, we make no warranties or representations of any kind, express or implied, regarding its completeness, accuracy, reliability, or currency. All information is provided on as it is basis without any guarantee of updates or corrections.
           </p>
           <p>
             <strong>No Affiliation or Endorsement</strong>
