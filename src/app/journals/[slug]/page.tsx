@@ -1,5 +1,3 @@
-// src/app/journals/[slug]/page.tsx
-
 import { supabase } from "../../../../utils/supabaseClient";
 import { notFound } from "next/navigation";
 
@@ -16,15 +14,11 @@ interface Journal {
   issn_online: string;
 }
 
-// Define the props for this page.
-interface PageProps {
-  params: {
-    slug: string;
-  };
-}
-
-// Explicitly specify that our async component returns a Promise<JSX.Element>
-export default async function JournalPage({ params }: PageProps): Promise<JSX.Element> {
+export default async function JournalPage({
+  params,
+}: {
+  params: { slug: string };
+}): Promise<JSX.Element> {
   const { slug } = params;
   
   // The URL is expected to be "url-friendly-title-unique_id"
