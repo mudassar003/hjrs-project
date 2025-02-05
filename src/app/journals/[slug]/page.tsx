@@ -1,27 +1,9 @@
-import { supabase } from "../../../../utils/supabaseClient";
-import { notFound } from "next/navigation";
-
-// Define the type for a Journal record.
-interface Journal {
-  title: string;
-  publisher: string;
-  subject_area: string;
-  subject_subcategories: string;
-  country: string;
-  jpi: string;
-  category: string;
-  issn_print: string;
-  issn_online: string;
-}
-
 export default async function JournalPage({
   params,
 }: {
-  // Allow params to be either a plain object or a Promise of one.
-  params: { slug: string } | Promise<{ slug: string }>;
+  params: { slug: string };
 }): Promise<JSX.Element> {
-  // Await params in case it is a promise.
-  const { slug } = await params;
+  const { slug } = params; // ❌ No need to await params
   
   // The URL is expected to be "url-friendly-title-unique_id"
   const parts = slug.split("-");
