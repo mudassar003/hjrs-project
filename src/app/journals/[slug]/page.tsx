@@ -17,9 +17,11 @@ interface Journal {
 export default async function JournalPage({
   params,
 }: {
-  params: { slug: string };
+  // Allow params to be either a plain object or a Promise of one.
+  params: { slug: string } | Promise<{ slug: string }>;
 }): Promise<JSX.Element> {
-  const { slug } = params;
+  // Await params in case it is a promise.
+  const { slug } = await params;
   
   // The URL is expected to be "url-friendly-title-unique_id"
   const parts = slug.split("-");
