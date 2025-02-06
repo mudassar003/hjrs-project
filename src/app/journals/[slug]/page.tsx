@@ -1,3 +1,5 @@
+// app/journals/[slug]/page.tsx
+
 import { supabase } from "../../../../utils/supabaseClient";
 import { notFound } from "next/navigation";
 import { use } from "react";
@@ -15,12 +17,8 @@ interface Journal {
   issn_online: string;
 }
 
-// By default in the app/ router, this is considered a Server Component.
-export default function JournalPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
+// ✅ CORRECT - A proper function definition
+export default function Page({ params }: { params: { slug: string } }) {
   // Destructure the slug from params
   const { slug } = params;
 
@@ -87,10 +85,12 @@ export default function JournalPage({
         <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <p className="text-gray-700">
-              <span className="font-semibold">Subject Area:</span> {journal.subject_area}
+              <span className="font-semibold">Subject Area:</span>{" "}
+              {journal.subject_area}
             </p>
             <p className="text-gray-700 mt-4">
-              <span className="font-semibold">Subject Subcategories:</span> {journal.subject_subcategories}
+              <span className="font-semibold">Subject Subcategories:</span>{" "}
+              {journal.subject_subcategories}
             </p>
             <p className="text-gray-700 mt-4">
               <span className="font-semibold">Country:</span> {journal.country}
@@ -101,10 +101,12 @@ export default function JournalPage({
               <span className="font-semibold">JPI:</span> {journal.jpi}
             </p>
             <p className="text-gray-700 mt-4">
-              <span className="font-semibold">ISSN (Print):</span> {journal.issn_print}
+              <span className="font-semibold">ISSN (Print):</span>{" "}
+              {journal.issn_print}
             </p>
             <p className="text-gray-700 mt-4">
-              <span className="font-semibold">ISSN (Online):</span> {journal.issn_online}
+              <span className="font-semibold">ISSN (Online):</span>{" "}
+              {journal.issn_online}
             </p>
           </div>
         </div>
