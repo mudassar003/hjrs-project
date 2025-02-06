@@ -1,8 +1,5 @@
-// app/journals/[slug]/page.tsx
-
-import { supabase } from "../../../../utils/supabaseClient";
 import { notFound } from "next/navigation";
-import { use } from "react";
+import { supabase } from "../../../../utils/supabaseClient";
 
 // Define the type for a Journal record.
 interface Journal {
@@ -17,9 +14,35 @@ interface Journal {
   issn_online: string;
 }
 
-// ✅ CORRECT - A proper function definition
-export default function Page({ params }: { params: { slug: string } }) {
-  // Destructure the slug from params
+// Define the type for the params object
+interface PageProps {
+  params: Params;
+}
+
+type Params = { slug: string };
+
+// Fetch journal data asynchronously
+async function fetchJournal(unique_id: number) {
+  const { data, error } = await supabase
+    .from("journals")
+    .select(`title, publisher, subject_area, subject_subcategories, country, jpi, category, issn_print, issn_online`)
+    .eq("unique_id", unique_id)
+    .single();
+  
+  if (error || !data) {
+    return null;
+  }
+  return data;
+}
+
+export async function generateMetadata({ params }: { params: Params }) {
+  const { slug } = params;
+  return {
+    title: `Journal - ${slug}`,
+  };
+}
+
+export default async function Page({ params }: PageProps) {
   const { slug } = params;
   const parts = slug.split("-");
   const uniqueIdString = parts[parts.length - 1];
@@ -29,33 +52,10 @@ export default function Page({ params }: { params: { slug: string } }) {
     notFound();
   }
 
-  // Create a Promise to fetch the journal. Note we don't 'await' here.
-  const dataPromise = supabase
-    .from("journals")
-    .select(`
-      title,
-      publisher,
-      subject_area,
-      subject_subcategories,
-      country,
-      jpi,
-      category,
-      issn_print,
-      issn_online
-    `)
-    .eq("unique_id", unique_id)
-    .single();
-
-  // Use the experimental use() hook to unwrap the Promise
-  const { data, error } = use(dataPromise);
-
-  // If there's an error or no data, display a 404 page
-  if (error || !data) {
+  const journal = await fetchJournal(unique_id);
+  if (!journal) {
     notFound();
   }
-
-  // At this point, 'data' is our Journal record
-  const journal: Journal = data;
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center py-10">
@@ -83,12 +83,10 @@ export default function Page({ params }: { params: { slug: string } }) {
         <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <p className="text-gray-700">
-              <span className="font-semibold">Subject Area:</span>{" "}
-              {journal.subject_area}
+              <span className="font-semibold">Subject Area:</span> {journal.subject_area}
             </p>
             <p className="text-gray-700 mt-4">
-              <span className="font-semibold">Subject Subcategories:</span>{" "}
-              {journal.subject_subcategories}
+              <span className="font-semibold">Subject Subcategories:</span> {journal.subject_subcategories}
             </p>
             <p className="text-gray-700 mt-4">
               <span className="font-semibold">Country:</span> {journal.country}
@@ -99,12 +97,10 @@ export default function Page({ params }: { params: { slug: string } }) {
               <span className="font-semibold">JPI:</span> {journal.jpi}
             </p>
             <p className="text-gray-700 mt-4">
-              <span className="font-semibold">ISSN (Print):</span>{" "}
-              {journal.issn_print}
+              <span className="font-semibold">ISSN (Print):</span> {journal.issn_print}
             </p>
             <p className="text-gray-700 mt-4">
-              <span className="font-semibold">ISSN (Online):</span>{" "}
-              {journal.issn_online}
+              <span className="font-semibold">ISSN (Online):</span> {journal.issn_online}
             </p>
           </div>
         </div>
