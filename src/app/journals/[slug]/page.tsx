@@ -22,7 +22,7 @@ interface PageProps {
 type Params = { slug: string };
 
 // Fetch journal data asynchronously
-async function fetchJournal(unique_id: number) {
+async function fetchJournal(unique_id: number): Promise<Journal | null> {
   const { data, error } = await supabase
     .from("journals")
     .select(`title, publisher, subject_area, subject_subcategories, country, jpi, category, issn_print, issn_online`)
