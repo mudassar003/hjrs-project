@@ -1,5 +1,6 @@
 import { supabase } from "../../../../utils/supabaseClient";
 import { notFound } from "next/navigation";
+import { use } from "react";
 
 // Define the type for a Journal record.
 interface Journal {
@@ -14,13 +15,13 @@ interface Journal {
   issn_online: string;
 }
 
-export default async function JournalPage({
+// By default in the app/ router, this is considered a Server Component.
+export default function JournalPage({
   params,
 }: {
-  // Now we define params as a plain object.
   params: { slug: string };
-}): Promise<JSX.Element> {
-  // Directly destructure the slug property.
+}) {
+  // Destructure the slug from params
   const { slug } = params;
 
   // The URL is expected to be "url-friendly-title-unique_id"
@@ -32,8 +33,8 @@ export default async function JournalPage({
     notFound();
   }
 
-  // Fetch the journal details from Supabase.
-  const { data, error } = await supabase
+  // Create a Promise to fetch the journal. Note we don't 'await' here.
+  const dataPromise = supabase
     .from("journals")
     .select(`
       title,
@@ -49,10 +50,15 @@ export default async function JournalPage({
     .eq("unique_id", unique_id)
     .single();
 
+  // Use the experimental use() hook to unwrap the Promise
+  const { data, error } = use(dataPromise);
+
+  // If there's an error or no data, display a 404 page
   if (error || !data) {
     notFound();
   }
 
+  // At this point, 'data' is our Journal record
   const journal: Journal = data;
 
   return (
