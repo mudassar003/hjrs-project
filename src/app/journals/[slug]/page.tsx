@@ -2,7 +2,6 @@
 
 import { supabase } from "../../../../utils/supabaseClient";
 import { notFound } from "next/navigation";
-import { use } from "react";
 
 // Define the type for a Journal record.
 interface Journal {
@@ -19,13 +18,11 @@ interface Journal {
 
 // Define the type for the params object
 interface PageProps {
-  params: {
-    slug: string;
-  };
+  params: Promise<{ slug: string }>;
 }
 
-export default function Page({ params }: PageProps) {
-  const { slug } = params;
+export default async function Page({ params }: PageProps) {
+  const { slug } = await params;
   const parts = slug.split("-");
   const uniqueIdString = parts[parts.length - 1];
   const unique_id = Number(uniqueIdString);
@@ -34,8 +31,8 @@ export default function Page({ params }: PageProps) {
     notFound();
   }
 
-  // Create a Promise to fetch the journal. Note we don't 'await' here.
-  const dataPromise = supabase
+  // Fetch the journal data
+  const { data, error } = await supabase
     .from("journals")
     .select(`
       title,
@@ -50,9 +47,6 @@ export default function Page({ params }: PageProps) {
     `)
     .eq("unique_id", unique_id)
     .single();
-
-  // Use the experimental use() hook to unwrap the Promise
-  const { data, error } = use(dataPromise);
 
   // If there's an error or no data, display a 404 page
   if (error || !data) {
