@@ -21,8 +21,6 @@ interface Journal {
 export default function Page({ params }: { params: { slug: string } }) {
   // Destructure the slug from params
   const { slug } = params;
-
-  // The URL is expected to be "url-friendly-title-unique_id"
   const parts = slug.split("-");
   const uniqueIdString = parts[parts.length - 1];
   const unique_id = Number(uniqueIdString);
